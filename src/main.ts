@@ -59,6 +59,7 @@ function applyLanguage(lang: Lang, persist: boolean): void {
     const label = lang === "zh" ? button.dataset.labelZh : button.dataset.labelEn;
     if (label) button.setAttribute("aria-label", label);
   });
+  applyShots();
   if (persist) {
     try {
       localStorage.setItem("goalward-lang", lang);
@@ -214,7 +215,68 @@ function setupScroller(): void {
   });
 }
 
+type Theme = "light" | "dark";
+
+function systemTheme(): Theme {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function storedTheme(): Theme | null {
+  try {
+    const value = localStorage.getItem("goalward-theme");
+    return value === "light" || value === "dark" ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function applyShots(): void {
+  const theme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  const lang = currentLang();
+  document.querySelectorAll<HTMLAnchorElement>("[data-shot]").forEach((link) => {
+    const name = link.dataset.shot;
+    if (!name) return;
+    const src = `/screenshots/${name}-${theme}-${lang}.png`;
+    link.href = src;
+    const image = link.querySelector("img");
+    if (image) image.src = src;
+  });
+}
+
+function applyTheme(theme: Theme, persist: boolean): void {
+  const root = document.documentElement;
+  root.dataset.theme = theme;
+  root.style.colorScheme = theme;
+  const color = getComputedStyle(root).getPropertyValue("--bg").trim();
+  if (color) document.querySelector('meta[name="theme-color"]')?.setAttribute("content", color);
+  document.querySelectorAll<HTMLButtonElement>("[data-set-theme]").forEach((button) => {
+    button.setAttribute("aria-pressed", button.dataset.setTheme === theme ? "true" : "false");
+  });
+  applyShots();
+  if (persist) {
+    try {
+      localStorage.setItem("goalward-theme", theme);
+    } catch {
+      /* Private mode can reject storage; the current page still switches. */
+    }
+  }
+}
+
+function setupTheme(): void {
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  applyTheme(storedTheme() ?? systemTheme(), false);
+  media.addEventListener("change", () => {
+    if (!storedTheme()) applyTheme(systemTheme(), false);
+  });
+  document.querySelectorAll<HTMLButtonElement>("[data-set-theme]").forEach((button) => {
+    button.addEventListener("click", () => {
+      applyTheme(button.dataset.setTheme === "dark" ? "dark" : "light", true);
+    });
+  });
+}
+
 applyLanguage(currentLang(), false);
+setupTheme();
 setupFaq();
 setupReveal();
 setupScroller();
