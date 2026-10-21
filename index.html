@@ -8,6 +8,8 @@
       name="description"
       content="Goalward 是免费、开源的 macOS 桌面应用。目标助手把你的方向整理成预期成果和成功标准，任务交给本机已有的编程 Agent 执行。数据留在这台 Mac 上。"
     />
+    <meta name="theme-color" content="#f7f8f5" />
+    <meta name="color-scheme" content="light dark" />
     <script>
       (function () {
         var stored = null;
@@ -35,14 +37,26 @@
         document.title = next.title;
         var description = document.querySelector('meta[name="description"]');
         if (description) description.setAttribute("content", next.description);
+        var themeStored = null;
+        try {
+          themeStored = localStorage.getItem("goalward-theme");
+        } catch (e) {}
+        var theme =
+          themeStored === "light" || themeStored === "dark"
+            ? themeStored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        root.dataset.theme = theme;
+        root.style.colorScheme = theme;
+        var themeMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeMeta) themeMeta.setAttribute("content", theme === "dark" ? "#191a1a" : "#f7f8f5");
       })();
     </script>
     <link rel="canonical" href="https://goalward.dev/" />
     <link rel="alternate" hreflang="zh-CN" href="https://goalward.dev/" />
     <link rel="alternate" hreflang="en" href="https://goalward.dev/" />
     <link rel="alternate" hreflang="x-default" href="https://goalward.dev/" />
-    <meta name="theme-color" content="#FDFCF8" />
-    <meta name="color-scheme" content="light" />
     <meta name="robots" content="index, follow" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Goalward" />
@@ -117,10 +131,25 @@
         <div class="nav-links">
           <a href="#scenarios"><span data-zh>场景</span><span data-en>Scenarios</span></a>
           <a href="#preview"><span data-zh>界面</span><span data-en>Preview</span></a>
-          <a href="#notes"><span data-zh>笔记</span><span data-en>Notes</span></a>
           <a href="#faq"><span data-zh>问答</span><span data-en>FAQ</span></a>
         </div>
         <div class="nav-end">
+          <div class="theme" role="group" aria-labelledby="theme-label">
+            <span id="theme-label" class="sr-only"><span data-zh>外观</span><span data-en>Appearance</span></span>
+            <button type="button" data-set-theme="light" aria-pressed="true">
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <circle cx="8" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width="1.5" />
+                <path d="M8 1.4v1.7M8 12.9v1.7M1.4 8h1.7M12.9 8h1.7M3.2 3.2l1.2 1.2M11.6 11.6l1.2 1.2M12.8 3.2l-1.2 1.2M4.4 11.6l-1.2 1.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              <span class="sr-only"><span data-zh>浅色</span><span data-en>Light</span></span>
+            </button>
+            <button type="button" data-set-theme="dark" aria-pressed="false">
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M9.1 1.7a5.6 5.6 0 1 0 5.2 8.4A4.5 4.5 0 0 1 9.1 1.7z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              </svg>
+              <span class="sr-only"><span data-zh>深色</span><span data-en>Dark</span></span>
+            </button>
+          </div>
           <div class="lang" role="group" aria-label="Language">
             <button type="button" data-set-lang="zh" aria-pressed="true">中文</button>
             <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
@@ -148,7 +177,7 @@
             <span data-en>A free, open-source desktop app. Say what you want to move forward. A goal assistant turns it into an outcome and success criteria, then the coding agents already on your Mac do the work.</span>
           </p>
           <div class="cta-row">
-            <a class="btn btn-coral js-download" href="https://releases.goalward.dev/v0.7.2/Goalward_0.7.2_macos-universal.dmg">
+            <a class="btn btn-primary js-download" href="https://releases.goalward.dev/v0.7.2/Goalward_0.7.2_macos-universal.dmg">
               <span data-zh>下载 macOS 版</span>
               <span data-en>Download for macOS</span>
             </a>
@@ -157,10 +186,6 @@
               <span data-en>View on GitHub</span>
             </a>
           </div>
-          <p class="fine">
-            <span data-zh>通用包（Apple Silicon 与 Intel）。试用构建为 ad-hoc 签名，未经 Apple 公证。<a href="https://github.com/Beace/goalward/blob/main/docs/install-macos-trial.zh-CN.txt">安装说明</a></span>
-            <span data-en>Universal build for Apple Silicon and Intel. This trial build is ad-hoc signed and not notarized by Apple. <a href="https://github.com/Beace/goalward/blob/main/docs/install-macos-trial.txt">Install instructions</a></span>
-          </p>
         </div>
       </section>
 
@@ -245,10 +270,8 @@
         </div>
         <div class="stage reveal">
           <article class="window window-left">
-            <div class="titlebar" aria-hidden="true"><span class="lights"><i></i><i></i><i></i></span><span>Goalward</span></div>
-            <a class="shot" href="/screenshots/goalward-workbench-en.png">
+            <a class="shot" data-shot="workbench" href="/screenshots/workbench-light-zh.png">
               <img
-                src="/screenshots/goalward-workbench-en.png"
                 width="1536"
                 height="960"
                 alt="macOS 上的任务工作区窗口，含对话、执行轨迹和产物预览。示例记录，没有真实命令执行。"
@@ -258,10 +281,8 @@
             </a>
           </article>
           <article class="window window-center">
-            <div class="titlebar" aria-hidden="true"><span class="lights"><i></i><i></i><i></i></span><span>Goalward</span></div>
-            <a class="shot" href="/screenshots/goalward-goals-en.png">
+            <a class="shot" data-shot="goals" href="/screenshots/goals-light-zh.png">
               <img
-                src="/screenshots/goalward-goals-en.png"
                 width="1536"
                 height="960"
                 alt="macOS 上的目标概览窗口，含任务进度、成功标准和工作目录。使用示例数据。"
@@ -277,67 +298,30 @@
             </a>
           </article>
           <article class="window window-right">
-            <div class="titlebar" aria-hidden="true"><span class="lights"><i></i><i></i><i></i></span><span>Goalward</span></div>
-            <a class="shot" href="/screenshots/goalward-appearance-en.png">
+            <a class="shot" data-shot="appearance" href="/screenshots/appearance-light-zh.png">
               <img
-                src="/screenshots/goalward-appearance-en.png"
                 width="1536"
                 height="960"
-                alt="macOS 上的外观设置窗口，含 Cobalt2 主题、背景和中英文界面语言。"
-                data-alt-zh="macOS 上的外观设置窗口，含 Cobalt2 主题、背景和中英文界面语言。"
-                data-alt-en="macOS appearance window with the Cobalt2 theme, background image, and Chinese or English UI language."
+                alt="macOS 上的外观设置窗口，界面主题与当前页面一致，含背景和界面语言。使用示例数据。"
+                data-alt-zh="macOS 上的外观设置窗口，界面主题与当前页面一致，含背景和界面语言。使用示例数据。"
+                data-alt-en="macOS appearance window in the same theme as this page, with background and UI language. Sample data."
               />
             </a>
           </article>
         </div>
-      </section>
-
-      <section id="notes" class="band">
-        <div class="copy reveal">
-          <p class="eyebrow">Goalward</p>
-          <h2>
-            <span data-zh>写在产品边上的 <em class="script">notes</em></span>
-            <span data-en><em class="script">Notes</em> from the maker</span>
-          </h2>
-          <p class="sub left">
-            <span data-zh>这里不是用户评价。还没有可以引用的真实反馈，所以这四张卡片只写下产品自己的原则。</span>
-            <span data-en>These are not testimonials. There are no customer quotes to cite, so the cards stay with the product’s own principles.</span>
-          </p>
-        </div>
-        <div class="notes">
-          <article class="note reveal">
-            <h3><span data-zh>目标优先</span><span data-en>Goal first</span></h3>
-            <p>
-              <span data-zh>从预期成果和成功标准开始，而不是一轮敞开的对话。任务是否接受、目标是否达成，分开判断。看证据的人是你。</span>
-              <span data-en>You start from an outcome and success criteria, not an open chat. Accepting a task and verifying a goal are separate. You read the evidence.</span>
-            </p>
-            <p class="sign"><span class="sign-line" aria-hidden="true"></span><span class="sign-name">Goalward</span></p>
-          </article>
-          <article class="note reveal">
-            <h3><span data-zh>你的 Agent</span><span data-en>Your agents</span></h3>
-            <p>
-              <span data-zh>Codex、Claude Code、Kimi CLI、Pi、DeepSeek Harness，或一个自定义 CLI。应用不附带这些运行时、模型或凭据。你自己安装并登录，Goalward 管理进程和协议。</span>
-              <span data-en>Codex, Claude Code, Kimi CLI, Pi, DeepSeek Harness, or a custom CLI. The app does not bundle those runtimes, models, or credentials. You install and sign in. Goalward manages the process and the protocol.</span>
-            </p>
-            <p class="sign"><span class="sign-line" aria-hidden="true"></span><span class="sign-name">Goalward</span></p>
-          </article>
-          <article class="note reveal">
-            <h3><span data-zh>留在本机</span><span data-en>Stays local</span></h3>
-            <p>
-              <span data-zh>没有托管后端，也没有云同步。工作区在 ~/Library/Application Support/dev.goalward.desktop/。你启用的 Agent 仍会按它们自己的方式联系模型服务。</span>
-              <span data-en>No hosted backend and no cloud sync. The workspace lives in ~/Library/Application Support/dev.goalward.desktop/. Agents you enable may still contact their own model services.</span>
-            </p>
-            <p class="sign"><span class="sign-line" aria-hidden="true"></span><span class="sign-name">Goalward</span></p>
-          </article>
-          <article class="note reveal">
-            <h3><span data-zh>试用构建</span><span data-en>Trial build</span></h3>
-            <p>
-              <span data-zh>需要 macOS 13.3 或更高版本。包是 ad-hoc 签名，未经公证。若系统拦下，到「系统设置 → 隐私与安全性」选择「仍要打开」。许可证是 MIT。</span>
-              <span data-en>macOS 13.3 or later. The package is ad-hoc signed and not notarized. If macOS blocks it, use System Settings → Privacy &amp; Security → Open Anyway. The license is MIT.</span>
-            </p>
-            <p class="sign"><span class="sign-line" aria-hidden="true"></span><span class="sign-name">Goalward</span></p>
-          </article>
-        </div>
+        <script>
+          (function () {
+            var root = document.documentElement;
+            var theme = root.dataset.theme === "dark" ? "dark" : "light";
+            var lang = root.dataset.lang === "en" ? "en" : "zh";
+            document.querySelectorAll("[data-shot]").forEach(function (link) {
+              var src = "/screenshots/" + link.getAttribute("data-shot") + "-" + theme + "-" + lang + ".png";
+              link.href = src;
+              var img = link.querySelector("img");
+              if (img) img.src = src;
+            });
+          })();
+        </script>
       </section>
 
       <section id="download" class="convert">
@@ -353,7 +337,7 @@
             <span data-zh>打开 DMG，把 Goalward.app 拖进「应用程序」。更新会优先读 latest.json，读不到再回退到 GitHub Releases。</span>
             <span data-en>Open the DMG and drag Goalward.app into Applications. Updates read latest.json first, then fall back to GitHub Releases.</span>
           </p>
-          <a class="btn btn-black js-download" href="https://releases.goalward.dev/v0.7.2/Goalward_0.7.2_macos-universal.dmg">
+          <a class="btn btn-primary js-download" href="https://releases.goalward.dev/v0.7.2/Goalward_0.7.2_macos-universal.dmg">
             <span data-zh>下载 macOS 版</span>
             <span data-en>Download for macOS</span>
           </a>
