@@ -1,0 +1,13 @@
+# Cloudflare Workers static assets. Hashed build output is immutable.
+# HTML is revalidated so deploys show up on the next request.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
