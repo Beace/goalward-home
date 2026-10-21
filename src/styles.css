@@ -163,12 +163,11 @@ a {
 .grain {
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
   z-index: 50;
   pointer-events: none;
-  opacity: 0.35;
-  mix-blend-mode: overlay;
+  background-image: url("/grain.webp");
+  background-size: 140px 140px;
+  opacity: 0.14;
 }
 
 h1,
@@ -293,13 +292,61 @@ code {
   object-fit: cover;
 }
 
+.wordmark {
+  display: none;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-menu {
+  display: none;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--secondary);
+  color: var(--ink);
+  cursor: pointer;
+  place-items: center;
+}
+
+.nav-menu svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.nav-menu .icon-close {
+  display: none;
+}
+
+.nav.is-open .nav-menu {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+.nav.is-open .nav-menu .icon-menu {
+  display: none;
+}
+
+.nav.is-open .nav-menu .icon-close {
+  display: block;
+}
+
 .nav-links {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 4px 14px;
-  order: 3;
-  width: 100%;
+}
+
+.sheet-label {
+  display: none;
 }
 
 .nav-links a {
@@ -406,25 +453,26 @@ html[data-theme="dark"] [data-set-theme="dark"] {
 
 .blob {
   position: absolute;
-  width: min(520px, 78vw);
-  height: min(520px, 78vw);
-  border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.6;
   pointer-events: none;
 }
 
+.hero-blob-a,
+.hero-blob-b {
+  width: min(860px, 92vw);
+  height: min(640px, 72vw);
+}
+
 .hero-blob-a {
-  background: var(--blob-a);
-  top: 18px;
-  left: 4%;
+  top: -90px;
+  left: -12%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--blob-a) 78%, transparent), transparent);
   animation: float 6s ease-in-out infinite;
 }
 
 .hero-blob-b {
-  background: var(--blob-b);
-  top: 70px;
-  right: 2%;
+  top: -30px;
+  right: -14%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--blob-b) 78%, transparent), transparent);
   animation: float 6s ease-in-out infinite reverse;
 }
 
@@ -658,7 +706,8 @@ html[data-lang="zh"] .scenario p {
   z-index: 1;
 }
 
-.shot {
+.shot,
+.shot picture {
   display: block;
   width: 100%;
   height: 100%;
@@ -739,23 +788,23 @@ html[data-lang="zh"] .scenario p {
   background: var(--primary-fg);
 }
 
+.convert-blob-a,
+.convert-blob-b {
+  width: min(880px, 100vw);
+  height: min(720px, 88vw);
+}
+
 .convert-blob-a {
-  background: var(--blob-a);
-  width: min(640px, 90vw);
-  height: min(640px, 90vw);
-  top: -80px;
-  left: -8%;
-  filter: blur(90px);
+  top: -180px;
+  left: -16%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--blob-a) 78%, transparent), transparent);
   animation: float 6s ease-in-out infinite;
 }
 
 .convert-blob-b {
-  background: var(--blob-b);
-  width: min(560px, 84vw);
-  height: min(560px, 84vw);
-  right: -10%;
-  bottom: -160px;
-  filter: blur(90px);
+  right: -18%;
+  bottom: -240px;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--blob-b) 78%, transparent), transparent);
   animation: float 6s ease-in-out infinite reverse;
 }
 
@@ -898,7 +947,7 @@ section[id] {
   transition: opacity 0.8s ease, transform 0.8s ease, visibility 0s linear 0s;
 }
 
-@media (min-width: 860px) {
+@media (min-width: 641px) {
   .nav {
     flex-wrap: nowrap;
     border-radius: 999px;
@@ -906,13 +955,186 @@ section[id] {
   }
 
   .nav-links {
-    order: 0;
+    order: 1;
     width: auto;
     margin-left: 8px;
   }
 
+  .theme,
+  .lang {
+    order: 2;
+  }
+
+  .theme {
+    margin-left: auto;
+  }
+
+  .nav-end {
+    order: 3;
+    margin-left: 0;
+  }
+
+  .wordmark,
+  .nav-menu,
+  .sheet-label {
+    display: none;
+  }
+
+  .nav-sheet,
+  .nav-sheet-controls,
+  .sheet-field {
+    display: contents;
+  }
+}
+
+@media (min-width: 860px) {
   .faq-item button {
     font-size: 20px;
+  }
+}
+
+@media (max-width: 860px) {
+  .nav {
+    background: color-mix(in srgb, var(--card) 96%, transparent);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding-top: 108px;
+  }
+
+  section[id] {
+    scroll-margin-top: 84px;
+  }
+
+  .nav {
+    position: relative;
+    flex-wrap: nowrap;
+    height: 56px;
+    gap: 8px;
+    padding: 0 8px 0 10px;
+    border-radius: 999px;
+  }
+
+  .wordmark {
+    display: block;
+    margin-right: auto;
+    min-width: 0;
+  }
+
+  .logo .sr-only {
+    display: none;
+  }
+
+  .nav-end {
+    margin-left: 0;
+    gap: 6px;
+  }
+
+  .nav-cta {
+    min-height: 34px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .nav-menu {
+    display: grid;
+  }
+
+  .nav-sheet {
+    position: absolute;
+    z-index: 2;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    box-shadow: var(--shadow);
+  }
+
+  html.js .nav-sheet {
+    display: none;
+  }
+
+  html.js .nav.is-open .nav-sheet {
+    display: flex;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+  }
+
+  .nav-links a {
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+
+  .nav-links a:hover,
+  .nav-links a:focus-visible {
+    background: var(--secondary);
+  }
+
+  .nav-sheet-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 4px 4px 6px;
+    border-top: 1px solid var(--border);
+  }
+
+  .sheet-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 44px;
+    padding: 4px 4px 4px 14px;
+  }
+
+  .sheet-label {
+    display: block;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 860px), (pointer: coarse) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .grain {
+    display: none;
+  }
+
+  .hero-blob-a,
+  .hero-blob-b,
+  .convert-blob-a,
+  .convert-blob-b,
+  .pulse {
+    animation: none;
+  }
+}
+
+@media (min-width: 861px) and (pointer: fine) {
+  .hero-blob-a,
+  .hero-blob-b,
+  .convert-blob-a,
+  .convert-blob-b,
+  .pulse {
+    will-change: transform;
   }
 }
 

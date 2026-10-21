@@ -56,7 +56,14 @@ function applyLanguage(lang: Lang, persist: boolean): void {
     if (alt) image.alt = alt;
   });
   document.querySelectorAll<HTMLButtonElement>("[data-label-zh]").forEach((button) => {
-    const label = lang === "zh" ? button.dataset.labelZh : button.dataset.labelEn;
+    const open = button.getAttribute("aria-expanded") === "true";
+    const label = open
+      ? lang === "zh"
+        ? button.dataset.openZh
+        : button.dataset.openEn
+      : lang === "zh"
+        ? button.dataset.labelZh
+        : button.dataset.labelEn;
     if (label) button.setAttribute("aria-label", label);
   });
   applyShots();
@@ -129,22 +136,110 @@ function setupFaq(): void {
 function setupReveal(): void {
   const nodes = [...document.querySelectorAll<HTMLElement>(".reveal")];
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const show = (node: HTMLElement) => node.classList.add("is-in");
-  if (reduce) {
-    nodes.forEach(show);
+  if (reduce || typeof IntersectionObserver === "undefined") {
+    nodes.forEach((node) => node.classList.add("is-in"));
     return;
   }
-  const revealNear = () => {
-    const limit = window.innerHeight * 0.92;
-    nodes.forEach((node) => {
-      if (node.classList.contains("is-in")) return;
-      if (node.getBoundingClientRect().top < limit) show(node);
-    });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.classList.add("is-in");
+        observer.unobserve(entry.target);
+      }
+    },
+    { rootMargin: "0px 0px -8% 0px", threshold: 0 },
+  );
+  nodes.forEach((node) => observer.observe(node));
+}
+
+function setupNavMenu(): void {
+  const nav = document.querySelector<HTMLElement>(".nav");
+  const button = document.querySelector<HTMLButtonElement>(".nav-menu");
+  const sheet = document.querySelector<HTMLElement>("#nav-sheet");
+  if (!nav || !button || !sheet) return;
+  const query = window.matchMedia("(max-width: 640px)");
+  const items = () =>
+    [...sheet.querySelectorAll<HTMLElement>("a, button")].filter((item) => !item.hasAttribute("disabled"));
+
+  const label = () => {
+    const lang = currentLang();
+    const open = button.getAttribute("aria-expanded") === "true";
+    const text = open
+      ? lang === "zh"
+        ? button.dataset.openZh
+        : button.dataset.openEn
+      : lang === "zh"
+        ? button.dataset.labelZh
+        : button.dataset.labelEn;
+    if (text) button.setAttribute("aria-label", text);
   };
-  revealNear();
-  document.addEventListener("scroll", revealNear, { passive: true, capture: true });
-  window.addEventListener("resize", revealNear);
-  window.addEventListener("hashchange", revealNear);
+
+  const close = (restore: boolean) => {
+    if (!nav.classList.contains("is-open")) return;
+    nav.classList.remove("is-open");
+    button.setAttribute("aria-expanded", "false");
+    if (query.matches) {
+      sheet.setAttribute("aria-hidden", "true");
+      sheet.setAttribute("inert", "");
+    }
+    label();
+    if (restore) button.focus();
+  };
+
+  const open = () => {
+    nav.classList.add("is-open");
+    button.setAttribute("aria-expanded", "true");
+    sheet.setAttribute("aria-hidden", "false");
+    sheet.removeAttribute("inert");
+    label();
+    items()[0]?.focus();
+  };
+
+  const sync = () => {
+    if (!query.matches) {
+      nav.classList.remove("is-open");
+      button.setAttribute("aria-expanded", "false");
+      sheet.removeAttribute("aria-hidden");
+      sheet.removeAttribute("inert");
+      label();
+      return;
+    }
+    const openNow = nav.classList.contains("is-open");
+    sheet.setAttribute("aria-hidden", openNow ? "false" : "true");
+    sheet.toggleAttribute("inert", !openNow);
+    label();
+  };
+
+  button.addEventListener("click", () => {
+    if (nav.classList.contains("is-open")) close(false);
+    else open();
+  });
+  sheet.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => close(false));
+  });
+  document.addEventListener("keydown", (event) => {
+    if (!nav.classList.contains("is-open")) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      close(true);
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const list = [button, ...items()];
+    const index = list.indexOf(document.activeElement as HTMLElement);
+    if (index < 0) return;
+    event.preventDefault();
+    const next = event.shiftKey ? (index - 1 + list.length) % list.length : (index + 1) % list.length;
+    list[next]?.focus();
+  });
+  document.addEventListener("pointerdown", (event) => {
+    if (!nav.classList.contains("is-open")) return;
+    if (!(event.target instanceof Node) || nav.contains(event.target)) return;
+    close(false);
+  });
+  query.addEventListener("change", sync);
+  sync();
 }
 
 function setupScroller(): void {
@@ -236,10 +331,17 @@ function applyShots(): void {
   document.querySelectorAll<HTMLAnchorElement>("[data-shot]").forEach((link) => {
     const name = link.dataset.shot;
     if (!name) return;
-    const src = `/screenshots/${name}-${theme}-${lang}.png`;
-    link.href = src;
+    const base = `/screenshots/${name}-${theme}-${lang}`;
+    link.href = `${base}-1536.webp`;
+    const avif = link.querySelector<HTMLSourceElement>('source[data-kind="avif"]');
+    const webp = link.querySelector<HTMLSourceElement>('source[data-kind="webp"]');
+    if (avif) avif.srcset = `${base}-768.avif 768w, ${base}-1024.avif 1024w, ${base}-1536.avif 1536w`;
+    if (webp) webp.srcset = `${base}-768.webp 768w, ${base}-1024.webp 1024w, ${base}-1536.webp 1536w`;
     const image = link.querySelector("img");
-    if (image) image.src = src;
+    if (image) {
+      image.src = `${base}-1536.webp`;
+      image.srcset = `${base}-768.webp 768w, ${base}-1024.webp 1024w, ${base}-1536.webp 1536w`;
+    }
   });
 }
 
@@ -279,6 +381,7 @@ applyLanguage(currentLang(), false);
 setupTheme();
 setupFaq();
 setupReveal();
+setupNavMenu();
 setupScroller();
 
 document.querySelectorAll<HTMLButtonElement>("[data-set-lang]").forEach((button) => {

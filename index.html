@@ -19,6 +19,7 @@
         var navLang = (navigator.language || "zh").toLowerCase();
         var lang = stored === "zh" || stored === "en" ? stored : navLang.indexOf("en") === 0 ? "en" : "zh";
         var root = document.documentElement;
+        root.classList.add("js");
         root.lang = lang === "zh" ? "zh-CN" : "en";
         root.dataset.lang = lang;
         var copy = {
@@ -115,12 +116,7 @@
       <span data-en>Skip to content</span>
     </a>
 
-    <svg class="grain" aria-hidden="true" focusable="false">
-      <filter id="goalward-grain" x="0" y="0" width="100%" height="100%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
-      </filter>
-      <rect width="100%" height="100%" filter="url(#goalward-grain)" />
-    </svg>
+    <div class="grain" aria-hidden="true"></div>
 
     <header class="nav-wrap">
       <nav class="nav" aria-label="Goalward">
@@ -128,36 +124,64 @@
           <img src="/brand/favicon-128.png" width="36" height="36" alt="" />
           <span class="sr-only">Goalward</span>
         </a>
-        <div class="nav-links">
-          <a href="#scenarios"><span data-zh>场景</span><span data-en>Scenarios</span></a>
-          <a href="#preview"><span data-zh>界面</span><span data-en>Preview</span></a>
-          <a href="#faq"><span data-zh>问答</span><span data-en>FAQ</span></a>
-        </div>
+        <a class="wordmark" href="#main">Goalward</a>
         <div class="nav-end">
-          <div class="theme" role="group" aria-labelledby="theme-label">
-            <span id="theme-label" class="sr-only"><span data-zh>外观</span><span data-en>Appearance</span></span>
-            <button type="button" data-set-theme="light" aria-pressed="true">
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <circle cx="8" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width="1.5" />
-                <path d="M8 1.4v1.7M8 12.9v1.7M1.4 8h1.7M12.9 8h1.7M3.2 3.2l1.2 1.2M11.6 11.6l1.2 1.2M12.8 3.2l-1.2 1.2M4.4 11.6l-1.2 1.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-              </svg>
-              <span class="sr-only"><span data-zh>浅色</span><span data-en>Light</span></span>
-            </button>
-            <button type="button" data-set-theme="dark" aria-pressed="false">
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d="M9.1 1.7a5.6 5.6 0 1 0 5.2 8.4A4.5 4.5 0 0 1 9.1 1.7z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
-              </svg>
-              <span class="sr-only"><span data-zh>深色</span><span data-en>Dark</span></span>
-            </button>
-          </div>
-          <div class="lang" role="group" aria-label="Language">
-            <button type="button" data-set-lang="zh" aria-pressed="true">中文</button>
-            <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
-          </div>
           <a class="nav-cta js-download" href="https://releases.goalward.dev/v0.7.2/Goalward_0.7.2_macos-universal.dmg">
             <span data-zh>下载</span>
             <span data-en>Download</span>
           </a>
+          <button
+            type="button"
+            class="nav-menu"
+            aria-expanded="false"
+            aria-controls="nav-sheet"
+            aria-haspopup="true"
+            data-label-zh="打开菜单"
+            data-label-en="Open menu"
+            data-open-zh="关闭菜单"
+            data-open-en="Close menu"
+          >
+            <svg class="icon-menu" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+            <svg class="icon-close" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+        <div class="nav-sheet" id="nav-sheet">
+          <div class="nav-links">
+            <a href="#scenarios"><span data-zh>场景</span><span data-en>Scenarios</span></a>
+            <a href="#preview"><span data-zh>界面</span><span data-en>Preview</span></a>
+            <a href="#faq"><span data-zh>问答</span><span data-en>FAQ</span></a>
+          </div>
+          <div class="nav-sheet-controls">
+            <div class="sheet-field">
+              <span class="sheet-label" id="theme-label"><span data-zh>外观</span><span data-en>Appearance</span></span>
+              <div class="theme" role="group" aria-labelledby="theme-label">
+                <button type="button" data-set-theme="light" aria-pressed="true">
+                  <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <circle cx="8" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M8 1.4v1.7M8 12.9v1.7M1.4 8h1.7M12.9 8h1.7M3.2 3.2l1.2 1.2M11.6 11.6l1.2 1.2M12.8 3.2l-1.2 1.2M4.4 11.6l-1.2 1.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                  </svg>
+                  <span class="sr-only"><span data-zh>浅色</span><span data-en>Light</span></span>
+                </button>
+                <button type="button" data-set-theme="dark" aria-pressed="false">
+                  <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M9.1 1.7a5.6 5.6 0 1 0 5.2 8.4A4.5 4.5 0 0 1 9.1 1.7z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                  </svg>
+                  <span class="sr-only"><span data-zh>深色</span><span data-en>Dark</span></span>
+                </button>
+              </div>
+            </div>
+            <div class="sheet-field">
+              <span class="sheet-label" id="lang-label"><span data-zh>语言</span><span data-en>Language</span></span>
+              <div class="lang" role="group" aria-labelledby="lang-label">
+                <button type="button" data-set-lang="zh" aria-pressed="true">中文</button>
+                <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+              </div>
+            </div>
+          </div>
         </div>
       </nav>
     </header>
@@ -270,25 +294,39 @@
         </div>
         <div class="stage reveal">
           <article class="window window-left">
-            <a class="shot" data-shot="workbench" href="/screenshots/workbench-light-zh.png">
-              <img
-                width="1536"
-                height="960"
-                alt="macOS 上的任务工作区窗口，含对话、执行轨迹和产物预览。示例记录，没有真实命令执行。"
-                data-alt-zh="macOS 上的任务工作区窗口，含对话、执行轨迹和产物预览。示例记录，没有真实命令执行。"
-                data-alt-en="macOS task workspace window with conversation, execution trace, and artifact preview. Sample records; no real command was executed."
-              />
+            <a class="shot" data-shot="workbench" href="/screenshots/workbench-light-zh-1536.webp">
+              <picture>
+                <source type="image/avif" data-kind="avif" sizes="(max-width: 860px) 92vw, 520px" />
+                <source type="image/webp" data-kind="webp" sizes="(max-width: 860px) 92vw, 520px" />
+                <img
+                  width="1536"
+                  height="960"
+                  alt="macOS 上的任务工作区窗口，含对话、执行轨迹和产物预览。示例记录，没有真实命令执行。"
+                  data-alt-zh="macOS 上的任务工作区窗口，含对话、执行轨迹和产物预览。示例记录，没有真实命令执行。"
+                  data-alt-en="macOS task workspace window with conversation, execution trace, and artifact preview. Sample records; no real command was executed."
+                  sizes="(max-width: 860px) 92vw, 520px"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
             </a>
           </article>
           <article class="window window-center">
-            <a class="shot" data-shot="goals" href="/screenshots/goals-light-zh.png">
-              <img
-                width="1536"
-                height="960"
-                alt="macOS 上的目标概览窗口，含任务进度、成功标准和工作目录。使用示例数据。"
-                data-alt-zh="macOS 上的目标概览窗口，含任务进度、成功标准和工作目录。使用示例数据。"
-                data-alt-en="macOS goal overview window with task progress, success criteria, and working directories. Sample data."
-              />
+            <a class="shot" data-shot="goals" href="/screenshots/goals-light-zh-1536.webp">
+              <picture>
+                <source type="image/avif" data-kind="avif" sizes="(max-width: 860px) 100vw, 650px" />
+                <source type="image/webp" data-kind="webp" sizes="(max-width: 860px) 100vw, 650px" />
+                <img
+                  width="1536"
+                  height="960"
+                  alt="macOS 上的目标概览窗口，含任务进度、成功标准和工作目录。使用示例数据。"
+                  data-alt-zh="macOS 上的目标概览窗口，含任务进度、成功标准和工作目录。使用示例数据。"
+                  data-alt-en="macOS goal overview window with task progress, success criteria, and working directories. Sample data."
+                  sizes="(max-width: 860px) 100vw, 650px"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
             </a>
             <a class="pulse" href="#download">
               <span data-zh>开始一件事</span>
@@ -298,14 +336,21 @@
             </a>
           </article>
           <article class="window window-right">
-            <a class="shot" data-shot="appearance" href="/screenshots/appearance-light-zh.png">
-              <img
-                width="1536"
-                height="960"
-                alt="macOS 上的外观设置窗口，界面主题与当前页面一致，含背景和界面语言。使用示例数据。"
-                data-alt-zh="macOS 上的外观设置窗口，界面主题与当前页面一致，含背景和界面语言。使用示例数据。"
-                data-alt-en="macOS appearance window in the same theme as this page, with background and UI language. Sample data."
-              />
+            <a class="shot" data-shot="appearance" href="/screenshots/appearance-light-zh-1536.webp">
+              <picture>
+                <source type="image/avif" data-kind="avif" sizes="(max-width: 860px) 92vw, 520px" />
+                <source type="image/webp" data-kind="webp" sizes="(max-width: 860px) 92vw, 520px" />
+                <img
+                  width="1536"
+                  height="960"
+                  alt="macOS 上的外观设置窗口，界面主题与当前页面一致，含背景和界面语言。使用示例数据。"
+                  data-alt-zh="macOS 上的外观设置窗口，界面主题与当前页面一致，含背景和界面语言。使用示例数据。"
+                  data-alt-en="macOS appearance window in the same theme as this page, with background and UI language. Sample data."
+                  sizes="(max-width: 860px) 92vw, 520px"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
             </a>
           </article>
         </div>
@@ -315,10 +360,17 @@
             var theme = root.dataset.theme === "dark" ? "dark" : "light";
             var lang = root.dataset.lang === "en" ? "en" : "zh";
             document.querySelectorAll("[data-shot]").forEach(function (link) {
-              var src = "/screenshots/" + link.getAttribute("data-shot") + "-" + theme + "-" + lang + ".png";
-              link.href = src;
+              var base = "/screenshots/" + link.getAttribute("data-shot") + "-" + theme + "-" + lang;
+              link.href = base + "-1536.webp";
+              var avif = link.querySelector('source[data-kind="avif"]');
+              var webp = link.querySelector('source[data-kind="webp"]');
+              if (avif) avif.srcset = base + "-768.avif 768w, " + base + "-1024.avif 1024w, " + base + "-1536.avif 1536w";
+              if (webp) webp.srcset = base + "-768.webp 768w, " + base + "-1024.webp 1024w, " + base + "-1536.webp 1536w";
               var img = link.querySelector("img");
-              if (img) img.src = src;
+              if (img) {
+                img.src = base + "-1536.webp";
+                img.srcset = base + "-768.webp 768w, " + base + "-1024.webp 1024w, " + base + "-1536.webp 1536w";
+              }
             });
           })();
         </script>
