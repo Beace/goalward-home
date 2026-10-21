@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "goalward-home",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-10-21",
+  "workers_dev": false,
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "goalward.dev", "custom_domain": true },
+    { "pattern": "www.goalward.dev", "custom_domain": true }
+  ]
+}

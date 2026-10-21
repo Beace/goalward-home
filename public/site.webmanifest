@@ -1,0 +1,27 @@
+{
+  "name": "Goalward",
+  "short_name": "Goalward",
+  "description": "A free, open-source macOS app that turns a direction into a goal, tasks, and evidence.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#FDFCF8",
+  "theme_color": "#FDFCF8",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/brand/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/brand/favicon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/brand/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
