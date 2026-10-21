@@ -1,7 +1,3 @@
-import "@fontsource/outfit/400.css";
-import "@fontsource/outfit/500.css";
-import "@fontsource/outfit/600.css";
-import "@fontsource/reenie-beanie/400.css";
 import "./styles.css";
 
 type Lang = "zh" | "en";
@@ -391,6 +387,19 @@ document.querySelectorAll<HTMLButtonElement>("[data-set-lang]").forEach((button)
   });
 });
 
-void readLatest().then((version) => {
-  if (version) applyVersion(version);
-});
+scheduleLatest();
+
+function scheduleLatest(): void {
+  const run = () => {
+    void readLatest().then((version) => {
+      if (version) applyVersion(version);
+    });
+  };
+  window.addEventListener(
+    "load",
+    () => {
+      window.requestIdleCallback(run, { timeout: 2000 });
+    },
+    { once: true },
+  );
+}

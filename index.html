@@ -85,6 +85,7 @@
     <link rel="icon" type="image/png" href="/brand/favicon-128.png" sizes="128x128" />
     <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preload" href="/fonts/reenie-goal.woff2" as="font" type="font/woff2" crossorigin />
     <style>
       html[data-lang="en"] [data-zh] { display: none !important; }
       html[data-lang="zh"] [data-en] { display: none !important; }
@@ -120,9 +121,11 @@
 
     <header class="nav-wrap">
       <nav class="nav" aria-label="Goalward">
-        <a class="logo" href="#main">
-          <img src="/brand/favicon-128.png" width="36" height="36" alt="" />
-          <span class="sr-only">Goalward</span>
+        <a class="logo" href="#main" aria-label="Goalward">
+          <picture>
+            <source srcset="/brand/logo-72.avif" type="image/avif" />
+            <img src="/brand/logo-72.webp" width="36" height="36" alt="" />
+          </picture>
         </a>
         <a class="wordmark" href="#main">Goalward</a>
         <div class="nav-end">
@@ -418,13 +421,13 @@
         </div>
         <div class="faq">
           <article class="faq-item">
-            <h3>
+            <h2>
               <button type="button" aria-expanded="false" aria-controls="faq-panel-1" id="faq-button-1">
                 <span data-zh>它免费吗？是开源的吗？</span>
                 <span data-en>Is it free and open source?</span>
                 <span class="plus" aria-hidden="true"></span>
               </button>
-            </h3>
+            </h2>
             <div class="faq-panel" id="faq-panel-1" role="region" aria-labelledby="faq-button-1" aria-hidden="true" inert>
               <div class="faq-inner">
                 <p>
@@ -435,13 +438,13 @@
             </div>
           </article>
           <article class="faq-item">
-            <h3>
+            <h2>
               <button type="button" aria-expanded="false" aria-controls="faq-panel-2" id="faq-button-2">
                 <span data-zh>支持哪些运行时？</span>
                 <span data-en>Which runtimes are supported?</span>
                 <span class="plus" aria-hidden="true"></span>
               </button>
-            </h3>
+            </h2>
             <div class="faq-panel" id="faq-panel-2" role="region" aria-labelledby="faq-button-2" aria-hidden="true" inert>
               <div class="faq-inner">
                 <p>
@@ -452,13 +455,13 @@
             </div>
           </article>
           <article class="faq-item">
-            <h3>
+            <h2>
               <button type="button" aria-expanded="false" aria-controls="faq-panel-3" id="faq-button-3">
                 <span data-zh>只有 macOS 吗？</span>
                 <span data-en>Is it macOS only?</span>
                 <span class="plus" aria-hidden="true"></span>
               </button>
-            </h3>
+            </h2>
             <div class="faq-panel" id="faq-panel-3" role="region" aria-labelledby="faq-button-3" aria-hidden="true" inert>
               <div class="faq-inner">
                 <p>
@@ -469,13 +472,13 @@
             </div>
           </article>
           <article class="faq-item">
-            <h3>
+            <h2>
               <button type="button" aria-expanded="false" aria-controls="faq-panel-4" id="faq-button-4">
                 <span data-zh>为什么会有 Gatekeeper 警告？怎么打开？</span>
                 <span data-en>Why the Gatekeeper warning, and how do I open it?</span>
                 <span class="plus" aria-hidden="true"></span>
               </button>
-            </h3>
+            </h2>
             <div class="faq-panel" id="faq-panel-4" role="region" aria-labelledby="faq-button-4" aria-hidden="true" inert>
               <div class="faq-inner">
                 <p>
@@ -486,13 +489,13 @@
             </div>
           </article>
           <article class="faq-item">
-            <h3>
+            <h2>
               <button type="button" aria-expanded="false" aria-controls="faq-panel-5" id="faq-button-5">
                 <span data-zh>我的数据存在哪里？</span>
                 <span data-en>Where is my data stored?</span>
                 <span class="plus" aria-hidden="true"></span>
               </button>
-            </h3>
+            </h2>
             <div class="faq-panel" id="faq-panel-5" role="region" aria-labelledby="faq-button-5" aria-hidden="true" inert>
               <div class="faq-inner">
                 <p>
@@ -503,13 +506,13 @@
             </div>
           </article>
           <article class="faq-item">
-            <h3>
+            <h2>
               <button type="button" aria-expanded="false" aria-controls="faq-panel-6" id="faq-button-6">
                 <span data-zh>更新是怎么工作的？</span>
                 <span data-en>How do updates work?</span>
                 <span class="plus" aria-hidden="true"></span>
               </button>
-            </h3>
+            </h2>
             <div class="faq-panel" id="faq-panel-6" role="region" aria-labelledby="faq-button-6" aria-hidden="true" inert>
               <div class="faq-inner">
                 <p>

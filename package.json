@@ -13,8 +13,7 @@
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
-    "@fontsource/outfit": "^5.2.8",
-    "@fontsource/reenie-beanie": "^5.2.8"
+    "@fontsource/outfit": "^5.2.8"
   },
   "devDependencies": {
     "typescript": "^5.9.3",
