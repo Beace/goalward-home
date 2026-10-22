@@ -25,7 +25,7 @@
   --blob-b: #e0eee3;
   --shadow: 0 4px 20px -2px rgb(32 41 29 / 0.08);
   --sans: "Outfit", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
-  --script: "Reenie Beanie", cursive;
+  --script: "Reenie Beanie", "Reenie Fallback", cursive;
   color: var(--ink);
   background: var(--bg);
   font-family: var(--sans);
@@ -57,9 +57,24 @@
   font-family: "Reenie Beanie";
   font-style: normal;
   font-weight: 400;
-  font-display: optional;
+  font-display: swap;
   src: url("/fonts/reenie-goal.woff2") format("woff2");
   unicode-range: U+0061, U+0067, U+006C, U+006F;
+  ascent-override: 75%;
+  descent-override: 25%;
+  line-gap-override: 0%;
+}
+
+/* "goal" advances 1309 units in the subset and 2039 in Noto Sans Regular.
+   64.2% size-adjust matches that width; the overrides restore Reenie's 750/250 em box. */
+@font-face {
+  font-family: "Reenie Fallback";
+  src: local("Noto Sans Regular"), local("NotoSans-Regular"), local("Arial"), local("Helvetica Neue"), local("PingFang SC Regular"), local("PingFangSC-Regular");
+  unicode-range: U+0061, U+0067, U+006C, U+006F;
+  size-adjust: 64.2%;
+  ascent-override: 116.82%;
+  descent-override: 38.94%;
+  line-gap-override: 0%;
 }
 
 @media (prefers-color-scheme: dark) {
